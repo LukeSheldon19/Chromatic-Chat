@@ -1,0 +1,109 @@
+1. Pull docker image with command:
+
+    docker pull ankane/pgvector:v0.5.1
+
+    From link: https://hub.docker.com/r/ankane/pgvector
+
+2. Run docker images command to ensure pgvector image is installed
+
+    docker images
+
+3. Go to PGVector github and follow to Postgres Docker image docs
+
+    https://github.com/pgvector/pgvector
+
+4. Look for Docker run command in Postgres Docker image docs
+
+    Something like: docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+
+    Actual command I used: docker run --name pgvector-test -e POSTGRES_PASSWORD=test -p 5432:5432 ankane/pgvector
+
+        -e = environment variables for container
+
+        -p = port mappings
+
+5. Go to pgAdmin and create DB server
+
+    Connection details should match the information used in docker run command
+
+
+
+DB is all set up at this point, next step is to connect from python(or whatever language I might be using potentially JS)
+
+# ---------------------------------- #
+
+1. Install python PG driver and pgvector in python with pip install commands
+
+    !pip install psycopg2-binary pgvector
+
+2. Langchain docs and setup for Vector Stores
+
+    https://docs.langchain.com/oss/python/integrations/vectorstores/index#pgvector
+
+    ensure langchain is installed with pip install: !pip install langchain
+
+    More pip install commands just in case:
+
+    !pip install -qU langchain-postgres
+
+    !pip install --upgrade langchain langchain-core langchain-postgres typing_extensions
+
+3. Import PGVector object
+
+    from langchain_postgres import PGVector
+
+4. Import embedding wrapper and save embedding model under langchain wrapper
+
+    from langchain_huggingface import HuggingFaceEmbeddings
+
+    embedding_model = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+5. Import lanchain document wrapper and ensure data is in correct format
+
+    from langchain_core.documents import Document
+
+    docs = []
+
+    for i in range(len(sents)):
+        doc = Document(
+            page_content=sents[i],
+            metadata={"label": labels[i]},
+        )
+        docs.append(doc)
+
+6. Initialize DB connection
+
+    CONNECTION_STRING = "postgresql+psycopg2://postgres:test@localhost:5432/vector_db"
+    COLLECTION_NAME = "test_vectors"
+
+    vector_store = PGVector(
+        embeddings=embedding_model,
+        collection_name=COLLECTION_NAME,
+        connection=CONNECTION_STRING,
+        use_jsonb=True,
+    )
+
+7. Dump documents
+
+    vector_store.add_documents(docs)
+
+8. Query and display results
+
+    results = vector_store.similarity_search(
+    "Wow I did not think that was going to happen", k=5
+    )
+
+    for doc in results:
+        print(f"* {doc.page_content} [{doc.metadata}]")
+
+
+# ----------------------------------#
+
+Additional langchain docs and video:
+
+https://docs.langchain.com/oss/python/integrations/vectorstores/pgvector
+
+https://www.youtube.com/watch?v=FDBnyJu_Ndg&list=LL&index=11&t=830s
+

@@ -1,0 +1,7 @@
+Frontend Angular
+
+Backend Next.js
+
+DB PG (PGVector)
+
+

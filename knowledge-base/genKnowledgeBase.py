@@ -13,7 +13,7 @@ texts = temp_df[TEXT_COLUMN].astype(str).tolist()
 labels = temp_df[LABEL_COLUMN].astype(int).tolist()
 
 embeddings = vectorFunctions.generate_embeddings(texts)
-rows = list(zip(texts, embeddings, labels))
+rows = list(zip(embeddings, labels))
 
 # -------------------- #
 

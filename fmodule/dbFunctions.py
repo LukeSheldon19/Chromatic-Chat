@@ -16,7 +16,6 @@ def create_vector_table(conn):
 
         CREATE TABLE IF NOT EXISTS {PGVECTOR_TABLE} (
             id SERIAL PRIMARY KEY,
-            content TEXT,
             embedding VECTOR({EMBEDDING_DIM}),
             label INT
         );
@@ -27,11 +26,11 @@ def create_vector_table(conn):
 
 def insert_embeddings(conn, rows):
     """
-    rows: List of tuples -> (text, embedding, label)
+    rows: List of tuples -> (embedding, label)
     """
     query = f"""
-    INSERT INTO {PGVECTOR_TABLE} (text, embedding, label)
-    VALUES (%s, %s, %s)
+    INSERT INTO {PGVECTOR_TABLE} (embedding, label)
+    VALUES (%s, %s)
     """
     with conn.cursor() as cur:
         execute_batch(cur, query, rows, page_size=1000)

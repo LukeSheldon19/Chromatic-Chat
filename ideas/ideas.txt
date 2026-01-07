@@ -9,3 +9,14 @@ DB PG (PGVector)
 Docker command to run PGVector Container:
 
 docker run --name pgvector -e POSTGRES_PASSWORD=temp -p 5432:5432 ankane/pgvector
+
+
+
+Gen knowledge base:
+
+python -m knowledge-base.genKnowledgeBase
+
+
+Run knowledge base testing script:
+
+python -m knowledge-base.testing

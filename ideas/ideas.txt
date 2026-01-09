@@ -20,3 +20,12 @@ python -m knowledge-base.genKnowledgeBase
 Run knowledge base testing script:
 
 python -m knowledge-base.testing
+
+
+Building and running REST Docker image/container:
+
+From project root run: docker build -f REST/Dockerfile -t chromatic-api .
+
+Run: docker run -p 8080:8080 chromatic-api
+
+remove Docker image if necessary: docker rmi chromatic-api

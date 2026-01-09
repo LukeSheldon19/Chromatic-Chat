@@ -1,5 +1,6 @@
 DB_CONFIG = {
-    "host": "localhost",
+    # "host": "localhost",
+    "host": "host.docker.internal",  # Changed from "localhost"
     "port": 5432,
     "database": "vector_db",
     "user": "postgres",

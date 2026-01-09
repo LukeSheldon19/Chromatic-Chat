@@ -1,1 +1,29 @@
-<p>chat works!</p>
+<div class="chat-container">  
+  <div class="input-section">
+    <input 
+      type="text" 
+      [(ngModel)]="userInput" 
+      placeholder="Type your message here..."
+      (keyup.enter)="sendMessage()"
+      [disabled]="isLoading"
+    />
+    <button (click)="sendMessage()" [disabled]="isLoading">
+      {{ isLoading ? 'Loading...' : 'Send' }}
+    </button>
+  </div>
+
+  <div class="result-section">
+    <div *ngIf="isLoading" class="loading">
+      Searching database...
+    </div>
+
+    <div *ngIf="error && !isLoading" class="error">
+      {{ error }}
+    </div>
+
+    <div *ngIf="result !== null && !isLoading && !error" class="result">
+      <h3>Result:</h3>
+      <pre>{{ result | json }}</pre>
+    </div>
+  </div>
+</div>

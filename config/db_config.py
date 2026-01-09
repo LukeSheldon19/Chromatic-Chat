@@ -1,5 +1,5 @@
 DB_CONFIG = {
-    # "host": "localhost",
+    # "host": "localhost", #may need to change back when creating knowledge base or testing -- Actually I don't think so
     "host": "host.docker.internal",  # Changed from "localhost"
     "port": 5432,
     "database": "vector_db",

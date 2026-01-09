@@ -12,6 +12,8 @@ temp_df = pd.read_csv(CSV_PATH)
 texts = temp_df[TEXT_COLUMN].astype(str).tolist()
 labels = temp_df[LABEL_COLUMN].astype(int).tolist()
 
+model, tokenizer = vectorFunctions.load_embedding_model_and_tokenizer()
+
 embeddings = vectorFunctions.generate_embeddings(texts)
 rows = list(zip(embeddings, labels))
 

@@ -35,3 +35,25 @@ def insert_embeddings(conn, rows):
     with conn.cursor() as cur:
         execute_batch(cur, query, rows, page_size=1000)
         conn.commit()
+
+def similarity_search_sum_labels(conn, query_emb, k=30):
+    """
+    Returns the sum of labels for the top-k most similar documents
+    using cosine distance. Smaller distance = more similar.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT SUM(label) AS total_label
+            FROM (
+                SELECT label
+                FROM knowledge_base
+                ORDER BY embedding <=> %s::vector
+                LIMIT %s
+            ) AS top_k;
+            """,
+            (query_emb, k)
+        )
+
+        result = cur.fetchone()
+        return result[0] if result else 0

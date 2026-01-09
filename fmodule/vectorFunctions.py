@@ -6,7 +6,6 @@ _model = None
 _tokenizer = None
 _device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 def load_embedding_model_and_tokenizer(
     model_ckpt="sentence-transformers/all-MiniLM-L6-v2"
 ):
@@ -20,9 +19,13 @@ def load_embedding_model_and_tokenizer(
 
     return _model, _tokenizer
 
+def get_model_and_tokenizer():
+    if _model is None or _tokenizer is None:
+        raise RuntimeError("Embedding model not loaded")
+    return _model, _tokenizer
 
 def generate_embeddings(texts, batch_size=32, max_length=512):
-    model, tokenizer = load_embedding_model_and_tokenizer()
+    model, tokenizer = get_model_and_tokenizer()
     all_embeddings = []
 
     for i in range(0, len(texts), batch_size):
